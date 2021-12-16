@@ -3,33 +3,49 @@ let step = 50;
 let canvasArray = document.getElementsByTagName("canvas")
 let canvas = canvasArray[0];
 let ctx = canvas.getContext("2d");
-let pointsXArray;
-let pointsYArray;
-let pointsRArray;
-let pointsHitArray;
 canvas.width = 510;
 canvas.height = 510;
 let width = canvas.width;
 let height = canvas.height;
 let valueR = 1;
+canvas.addEventListener('mousedown', event => clickOnCanvas(canvas, event));
 
-function updateR(){
-    for (let i = 0; i < 6; i++){
-        let path = "form:r:";
-        path += i;
-        if (document.getElementById(path).checked()){
-            valueR = document.getElementById(path).value;
-            return;
-        }
+function clickOnCanvas(canvas, event) {
+    let rect = canvas.getBoundingClientRect()
+    let width = canvas.width;
+    let height = canvas.height;
+    let x = (event.clientX - rect.left - width / 2) / step;
+    let y = (height / 2 - event.clientY + rect.top) / step;
+    x = x.toFixed(2).replace(".00", "");
+    y = y.toFixed(2).replace(".00", "");
+    let r = valueR;
+    console.log(x, y, r);
+    if (isLegal(x, y, r)) {
+        $('input[name="form:x_input"]').val(x);
+        $('.textY').val(y);
+        $('.submit').click();
     }
 }
 
+function isLegal(x, y, r) {
+    return (isNumber(x) && isNumber(y) && isNumber(r) &&
+        x >= -3 && x <= 3 && y > -3 && y < 5 && r >= 1 && r <= 3);
+}
+
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function updateR(){
+    valueR = $('input[name="form:r"]:checked').val();
+}
+
 function loadCanvas(){
-    pointsXArray = $("#point_x td").map(v => v.innerHTML);
-    pointsYArray = $("#point_y td").map(v => v.innerHTML);
-    pointsRArray = $("#point_r td").map(v => v.innerHTML);
-    pointsHitArray = $("#point_hit td").map(v => v.innerHTML);
+    clearCanvas();
     updateR();
+    if (valueR === undefined || valueR > 3 || valueR < 1){
+        valueR = 1.0;
+    }
     drawCanvas();
 }
 
@@ -46,8 +62,8 @@ function drawCanvas() {
 function drawTriangle(rValue) {
     ctx.fillStyle = '#FF7400';
     ctx.beginPath();
-    ctx.moveTo((width / 2) + rValue / 2, height / 2);
-    ctx.lineTo(width / 2, height / 2 + rValue);
+    ctx.moveTo((width / 2) - rValue, height / 2);
+    ctx.lineTo(width / 2, height / 2 - rValue / 2);
     ctx.lineTo(width / 2, height / 2);
     ctx.fill();
 }
@@ -56,7 +72,7 @@ function drawCircle(rValue) {
     ctx.beginPath();
     ctx.fillStyle = '#FF7400';
     ctx.strokeStyle = '#FF7400';
-    ctx.arc(width / 2, height / 2, rValue, Math.PI, 3 * Math.PI / 2);
+    ctx.arc(width / 2, height / 2, rValue, Math.PI / 2, Math.PI);
     ctx.lineTo(width / 2, height / 2)
     ctx.fill();
     ctx.stroke();
@@ -66,7 +82,7 @@ function drawRectangle(rValue) {
     ctx.fillStyle = '#FF7400';
     ctx.strokeStyle = '#FF7400';
     ctx.beginPath();
-    ctx.fillRect(width / 2, height / 2, rValue / 2, -rValue);
+    ctx.fillRect(width / 2, height / 2, rValue, rValue / 2);
 }
 
 function drawAXIS() {
@@ -107,28 +123,38 @@ function drawAXIS() {
 }
 
 function clearCanvas() {
-    ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-    drawPoints();
 }
 
 function drawPoints() {
-    for (let i = 0; i < pointsXArray.length; i++) {
-        if (pointsRArray[i] === valueR.value)
-            drawPoint(pointsXArray[i], pointsYArray[i]);
+    let pointsTable = document.getElementsByClassName("result_table")[0];
+    if (pointsTable) {
+        let rows = pointsTable.tBodies[0].rows;
+        for (let i = 0; i < rows.length; i++) {
+            let columns = rows[i].children;
+            drawPoint(
+                columns[0].textContent,
+                columns[1].textContent,
+                columns[2].textContent,
+                columns[3].textContent
+            );
+        }
     }
 }
 
-function drawPoint(x, y) {
-    let pointColor;
-    pointColor = '#06266F';
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2 + x * step, canvas.height / 2 - y * step, axis_separator_offset, 0, Math.PI * 2);
-    ctx.fillStyle = pointColor;
-    ctx.strokeStyle = pointColor;
-    ctx.fill();
-    ctx.stroke();
+function drawPoint(x, y, r, hit) {
+    if (Number(r) === Number(valueR)){
+        let pointColor;
+        if (hit === "true")
+            pointColor = '#00ff0b';
+        else pointColor = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2 + x * step, canvas.height / 2 - y * step, axis_separator_offset, 0, Math.PI * 2);
+        ctx.fillStyle = pointColor;
+        ctx.strokeStyle = pointColor;
+        ctx.fill();
+        ctx.stroke();
+    }
 }
 
 window.onload = loadCanvas();

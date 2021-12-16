@@ -1,0 +1,6 @@
+/target/
+/pom.xml
+/src/main/resources/META-INF/persistence.xml
+/src/main/resources/META-INF/beans.xml
+/web_3.iml
+/.idea/

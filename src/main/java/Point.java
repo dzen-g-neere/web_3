@@ -1,47 +1,20 @@
-public class Point {
-    double x, y, r, processingTime;
-    boolean hit;
+import lombok.Data;
+import javax.persistence.*;
+import java.io.Serializable;
 
-    public Point() {
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getR() {
-        return r;
-    }
-
-    public void setR(double r) {
-        this.r = r;
-    }
-
-    public double getProcessingTime() {
-        return processingTime;
-    }
-
-    public void setProcessingTime(double processingTime) {
-        this.processingTime = processingTime;
-    }
-
-    public boolean getHit() {
-        return hit;
-    }
-
-    public void setHit(boolean hit) {
-        this.hit = hit;
-    }
+@Data
+@Entity
+@Table(name = "points")
+public class Point implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Column(name = "x", nullable = false)
+    private String x;
+    @Column(name = "y", nullable = false)
+    private String y;
+    @Column(name = "r", nullable = false)
+    private String r;
+    @Column(name = "result", nullable = false)
+    private String result;
 }

@@ -1,3 +1,4 @@
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -7,18 +8,27 @@ import java.util.List;
 @Named
 @ApplicationScoped
 public class PointsBean {
-    List<Point> points = Collections.synchronizedList(new ArrayList<>());
-    Point point = new Point();
+    private DatabaseManager dataBaseManager;
+    private List<Point> entries;
+    private HitInspector hitInspector;
+    private Point point;
 
-    PointsBean(){
+    @PostConstruct
+    public void init() {
+        entries = Collections.synchronizedList(new ArrayList<>());
+        hitInspector = new HitInspector();
+        point = new Point();
+        point.setR("1");
+        dataBaseManager = new DatabaseManager();
+        entries = dataBaseManager.loadEntries();
     }
 
-    public List<Point> getPoints() {
-        return points;
+    public List<Point> getEntries() {
+        return entries;
     }
 
-    public void setPoints(List<Point> points) {
-        this.points = points;
+    public void setEntries(List<Point> entries) {
+        this.entries = entries;
     }
 
     public Point getPoint() {
@@ -29,13 +39,33 @@ public class PointsBean {
         this.point = point;
     }
 
-    public void addPoint(){
-        points.add(this.point);
+    public void addPoint() {
+        try {
+            double x, y, r;
+            x = Double.parseDouble(point.getX());
+            y = Double.parseDouble(point.getY());
+            r = Double.parseDouble(point.getR());
+            if (hitInspector.isValid(x, y, r)) {
+                point.setResult(hitInspector.isHit(x, y, r));
+                dataBaseManager.addEntryToDB(getPoint());
+                entries.add(this.point);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         point = new Point();
+        point.setR("1");
     }
 
-    public Object getEntries() {
-        System.out.println(points);
-        return points;
+    public void clearEntries() {
+        try {
+            for (Point p:entries) {
+                dataBaseManager.clearDB(p);
+            }
+            entries.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        entries.clear();
     }
 }

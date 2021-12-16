@@ -9,79 +9,86 @@
 
 <ui:composition template="WEB-INF/templates/template.xhtml">
 
-   <ui:define name="main">
-      <main class="container">
-         <div>
-            <section>
-               <ui:include src="templates/canvas.html"/>
-            </section>
-            <section>
-               <h:form id="form">
-                  <h:panelGrid columns="2" cellpadding="5">
-                     <h:outputLabel for="x">
-                        X(-3, 3)
-                     </h:outputLabel>
-                     <p:spinner id="x" value="#{pointsBean.point.x}" min="-3" max="5" stepFactor="1">
-
-                     </p:spinner>
-                     <h:outputLabel for="y">
-                        Y
-                     </h:outputLabel>
-                     <h:inputText id="y" required="true" value="#{pointsBean.point.y}">
-
-                     </h:inputText>
-                     <h:outputLabel for="r">
-                        R(1, 3)
-                     </h:outputLabel>
-                     <h:selectOneRadio id="r"  required="true" value="#{pointsBean.point.r}">
-                        <f:selectItem itemValue = "1.0" itemLabel = "1.0" />
-                        <f:selectItem itemValue = "1.5" itemLabel = "1.5" />
-                        <f:selectItem itemValue = "2.0" itemLabel = "2.0" />
-                        <f:selectItem itemValue = "2.5" itemLabel = "2.5" />
-                        <f:selectItem itemValue = "3.0" itemLabel = "3.0" />
-                     </h:selectOneRadio>
-                     <p:commandButton value="Submit" ajax="false" onclick="loadCanvas()" action="#{pointsBean.addPoint}"/>
-                  </h:panelGrid>
-               </h:form>
-            </section>
-         </div>
-
-         <section>
+    <ui:define name="main">
+        <main class="container">
             <div>
-               <h:panelGroup id="pointsTable">
-                  <h:dataTable styleClass="result_table" value="#{pointsBean.entries}" var="point">
-                     <h:column headerClass="data_column point_x">
-                        <f:facet name="header">X</f:facet>
-                        <h:outputText value="#{point.x}"/>
-                     </h:column>
-                     <h:column headerClass="data_column point_y">
-                        <f:facet name="header">Y</f:facet>
-                        <h:outputText value="#{point.y}"/>
-                     </h:column>
-                     <h:column headerClass="data_column point_r">
-                        <f:facet name="header">R</f:facet>
-                        <h:outputText value="#{point.r}"/>
-                     </h:column>
-                     <h:column headerClass="data_column point_hit">
-                        <f:facet name="header">Результат</f:facet>
-                        <h:outputText value="#{point.hit}"/>
-                     </h:column>
-                     <h:column headerClass="data_column">
-                        <f:facet name="header">Время выполнения</f:facet>
-                        <h:outputText headerClass="point_hit" value="#{point.processingTime}"/>
-                     </h:column>
-                  </h:dataTable>
-               </h:panelGroup>
+                <section>
+                    <ui:include src="templates/canvas.html"/>
+                </section>
+                <section>
+                    <h:form id="form">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="x">
+                                X(-3, 3)
+                            </h:outputLabel>
+                            <p:spinner id="x" styleClass="spinnerX" value="#{pointsBean.point.x}" min="-3" max="5"
+                                       stepFactor="1">
+                            </p:spinner>
+                            <h:outputLabel for="y">
+                                Y
+                            </h:outputLabel>
+                            <section>
+                                <h:inputText id="y" styleClass="textY" required="true" value="#{pointsBean.point.y}"
+                                             validator="fieldValidator">
+
+                                </h:inputText>
+                                <h:message for="y"/>
+                            </section>
+
+                            <h:outputLabel for="r">
+                                R(1, 3)
+                            </h:outputLabel>
+                            <h:selectOneRadio id="r" required="true" value="#{pointsBean.point.r}"
+                                              onclick="loadCanvas()">
+                                <f:selectItem itemValue="1.0" itemLabel="1.0"/>
+                                <f:selectItem itemValue="1.5" itemLabel="1.5"/>
+                                <f:selectItem itemValue="2.0" itemLabel="2.0"/>
+                                <f:selectItem itemValue="2.5" itemLabel="2.5"/>
+                                <f:selectItem itemValue="3.0" itemLabel="3.0"/>
+                            </h:selectOneRadio>
+                            <p:commandButton value="Submit" styleClass="submit" ajax="false"
+                                             action="#{pointsBean.addPoint}"/>
+                        </h:panelGrid>
+                    </h:form>
+                    <h:form>
+                        <p:commandButton value="Clear" styleClass="submit" ajax="false"
+                                         action="#{pointsBean.clearEntries()}"/>
+                    </h:form>
+                </section>
             </div>
-            <div>
-               <h:link outcome="goIndex">
-                  На стартовую страницу!
-               </h:link>
-            </div>
-         </section>
-      </main>
-      <h:outputScript library="javascript" name="CanvasScript.js"/>
-   </ui:define>
+
+            <section>
+                <div>
+                    <h:panelGroup id="pointsTable">
+                        <h:dataTable styleClass="result_table" value="#{pointsBean.entries}" var="point">
+                            <h:column headerClass="data_column point_x">
+                                <f:facet name="header">X</f:facet>
+                                <h:outputText value="#{point.x}"/>
+                            </h:column>
+                            <h:column headerClass="data_column point_y">
+                                <f:facet name="header">Y</f:facet>
+                                <h:outputText value="#{point.y}"/>
+                            </h:column>
+                            <h:column headerClass="data_column point_r">
+                                <f:facet name="header">R</f:facet>
+                                <h:outputText value="#{point.r}"/>
+                            </h:column>
+                            <h:column headerClass="data_column point_hit">
+                                <f:facet name="header">Результат</f:facet>
+                                <h:outputText value="#{point.result}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGroup>
+                </div>
+                <div>
+                    <h:link outcome="goIndex">
+                        На стартовую страницу!
+                    </h:link>
+                </div>
+            </section>
+        </main>
+        <h:outputScript library="javascript" name="CanvasScript.js"/>
+    </ui:define>
 
 </ui:composition>
 </html>
