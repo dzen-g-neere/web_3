@@ -18,7 +18,7 @@ public class PointsBean {
         entries = Collections.synchronizedList(new ArrayList<>());
         hitInspector = new HitInspector();
         point = new Point();
-        point.setR("1");
+        point.setR(1);
         dataBaseManager = new DatabaseManager();
         entries = dataBaseManager.loadEntries();
     }
@@ -42,9 +42,9 @@ public class PointsBean {
     public void addPoint() {
         try {
             double x, y, r;
-            x = Double.parseDouble(point.getX());
-            y = Double.parseDouble(point.getY());
-            r = Double.parseDouble(point.getR());
+            x = point.getX();
+            y = point.getY();
+            r = point.getR();
             if (hitInspector.isValid(x, y, r)) {
                 point.setResult(hitInspector.isHit(x, y, r));
                 dataBaseManager.addEntryToDB(getPoint());
@@ -54,15 +54,12 @@ public class PointsBean {
             e.printStackTrace();
         }
         point = new Point();
-        point.setR("1");
+        point.setR(1);
     }
 
     public void clearEntries() {
         try {
-            for (Point p:entries) {
-                dataBaseManager.clearDB(p);
-            }
-            entries.clear();
+            dataBaseManager.clearDB();
         } catch (Exception e) {
             e.printStackTrace();
         }

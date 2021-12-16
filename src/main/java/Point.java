@@ -10,11 +10,11 @@ public class Point implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "x", nullable = false)
-    private String x;
+    private double x;
     @Column(name = "y", nullable = false)
-    private String y;
+    private double y;
     @Column(name = "r", nullable = false)
-    private String r;
+    private double r;
     @Column(name = "result", nullable = false)
     private String result;
 }
