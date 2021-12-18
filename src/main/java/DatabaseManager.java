@@ -23,6 +23,8 @@ public class DatabaseManager {
     }
 
     public synchronized void clearDB() throws Exception {
+        userTransaction.begin();
         entityManager.createQuery("DELETE FROM Point").executeUpdate();
+        userTransaction.commit();
     }
 }

@@ -1,5 +1,6 @@
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,19 +9,23 @@ import java.util.List;
 @Named
 @ApplicationScoped
 public class PointsBean {
+    @Inject
     private DatabaseManager dataBaseManager;
     private List<Point> entries;
     private HitInspector hitInspector;
     private Point point;
 
     @PostConstruct
-    public void init() {
-        entries = Collections.synchronizedList(new ArrayList<>());
+    public void init() throws Exception{
+        entries = new ArrayList<>();
         hitInspector = new HitInspector();
         point = new Point();
         point.setR(1);
-        dataBaseManager = new DatabaseManager();
-        entries = dataBaseManager.loadEntries();
+        try{
+            entries = dataBaseManager.loadEntries();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public List<Point> getEntries() {
@@ -64,5 +69,13 @@ public class PointsBean {
             e.printStackTrace();
         }
         entries.clear();
+    }
+
+    public DatabaseManager getDataBaseManager() {
+        return dataBaseManager;
+    }
+
+    public void setDataBaseManager(DatabaseManager dataBaseManager) {
+        this.dataBaseManager = dataBaseManager;
     }
 }
