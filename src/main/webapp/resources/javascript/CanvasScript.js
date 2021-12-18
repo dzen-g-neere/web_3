@@ -157,4 +157,4 @@ function drawPoint(x, y, r, hit) {
     }
 }
 
-window.onload = loadCanvas();
+window.onload = loadCanvas;

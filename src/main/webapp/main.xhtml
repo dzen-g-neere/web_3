@@ -17,24 +17,27 @@
                 </section>
                 <section>
                     <h:form id="form">
-                        <h:panelGrid columns="2" cellpadding="5">
+                        <section>
                             <h:outputLabel for="x">
                                 X(-3, 3)
                             </h:outputLabel>
-                            <p:spinner id="x" styleClass="spinnerX" value="#{pointsBean.point.x}" min="-3" max="5"
+                            <p:spinner id="x" styleClass="spinnerX" value="#{pointsBean.point.x}" min="-3" max="3"
                                        stepFactor="1">
                             </p:spinner>
+                        </section>
+                        <section>
                             <h:outputLabel for="y">
-                                Y
+                                Y (-3, 5)
                             </h:outputLabel>
-                            <section>
-                                <h:inputText id="y" styleClass="textY" required="true" value="#{pointsBean.point.y}"
-                                             validator="fieldValidator">
 
-                                </h:inputText>
-                                <h:message for="y"/>
-                            </section>
+                            <h:inputText id="y" styleClass="textY" required="true" value="#{pointsBean.point.y}"
+                                         validator="fieldValidator">
 
+                            </h:inputText>
+                            <h:message for="y"/>
+                        </section>
+
+                        <section>
                             <h:outputLabel for="r">
                                 R(1, 3)
                             </h:outputLabel>
@@ -46,12 +49,13 @@
                                 <f:selectItem itemValue="2.5" itemLabel="2.5"/>
                                 <f:selectItem itemValue="3.0" itemLabel="3.0"/>
                             </h:selectOneRadio>
-                            <p:commandButton value="Submit" styleClass="submit" ajax="false"
-                                             action="#{pointsBean.addPoint}"/>
-                        </h:panelGrid>
+                        </section>
+
+                        <p:commandButton value="Submit" styleClass="submit" ajax="false"
+                                         action="#{pointsBean.addPoint}"/>
                     </h:form>
                     <h:form>
-                        <p:commandButton value="Clear" styleClass="submit" ajax="false"
+                        <p:commandButton value="Clear" styleClass="clear" ajax="false"
                                          action="#{pointsBean.clearEntries()}"/>
                     </h:form>
                 </section>
